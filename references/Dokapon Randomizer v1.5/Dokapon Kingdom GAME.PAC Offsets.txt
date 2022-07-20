@@ -1,0 +1,228 @@
+[Shop Data]
+0x0B1C9844 - Start of Weapon Shop Data
+ - Literally just lists of Weapons and Shields seperated by 00
+   - Weapons and Shields are also seperate, but go in the same shop.
+
+0x0B1C98F0 - Start of Consumables Shop Data
+ - Literally just lists of items seperated by 00
+
+0x0B1C9994 - Start of Magic Shop Data
+ - Literally just lists of Magic seperated by 00
+   - Shops are ordered by Field (+37h), then Attack Battle (+00h), then Defense Battle Magic (+1Eh).
+
+[Item Data]
+0x0B1C7BD8 - Start of Loot Space Unique Drops (Each drop starts with 86h)
+  - [32-bit] 86 00 00 00 ?
+  - [8-bit] Drop Subtable (Status Ailments, HP)
+  - [8-bit] Subtable ID
+  - [2x 8-bit] ??, ??
+  - [16-bit] Effect ID
+  - [2x 8-bit] ??, ??
+  - [32-bit] Drop Effects? (Unknown)
+  - [32-bit] Drop Effects? (Money, HP, etc.)
+
+0x0B1CCC08 - Start of Weapon Table (Each weapon starts with 58h)
+  - [32-bit] 58 00 00 00 ?
+  - [8-bit] Table ID
+  - [8-bit] ??
+  - [16-bit] Icon ID (Part of Name)
+  - [ASCIIString] Item Name
+  - [4x 8-bit] ??, ??, ??, ??
+  - [32-bit] Item Price
+  - [16-bit] Attack Value
+  - [16-bit] Defense Value
+  - [16-bit] Magic Value
+  - [16-bit] Speed Value
+  - [16-bit] HP Value
+  - [2x 8-bit] ??, ??
+
+0x0B1CF380 - Start of Shield Table (Each shield starts with 5Eh)
+  - [32-bit] 5E 00 00 00 ?
+  - [8-bit] Table ID
+  - [8-bit] ??
+  - [16-bit] Icon ID (Part of Name)
+  - [ASCIIString] Item Name
+  - [4x 8-bit] ??, ??, ??, ??
+  - [32-bit] Item Price
+  - [16-bit] Defense Value
+  - [16-bit] Attack Value
+  - [16-bit] Magic Value
+  - [16-bit] Speed Value
+  - [16-bit] HP Value
+  - [2x 8-bit] ??, ??
+
+0x0B1D05E0 - Start of Accessory Table (Each accessory starts with 64h)
+  - [32-bit] 64 00 00 00 ?
+  - [8-bit] Table ID
+  - [8-bit] ??
+  - [16-bit] Icon ID (Part of Name)
+  - [ASCIIString] Item Name
+  - [32-bit] ?? ?? ?? ??
+  - [32-bit] Item Price
+  - [16-bit] Attack Value
+  - [16-bit] Defense Value
+  - [16-bit] Magic Value
+  - [16-bit] Speed Value
+  - [16-bit] HP Value
+  - [2x 8-bit] ??, ??
+  - [32-bit] ?? ?? ?? ??
+
+0x0B1D2780 - Start of Consumables Table (Each consumable starts with 69h)
+  - [32-bit] 69 00 00 00 ?
+  - [8-bit] Table ID
+  - [8-bit] ??
+  - [16-bit] Icon ID (Part of Name)
+  - [ASCIIString] Item Name
+  - [32-bit] Item Price
+  - [16-bit] Item Effect
+  - [2x 8-bit] ??, ??
+  
+0x0B1D3020 - Start of Gifts to the King Table (Each gift starts with 6Ch)
+  - [32-bit] 69 00 00 00 ?
+  - [8-bit] Table ID
+  - [8-bit] ??
+  - [16-bit] Icon ID (Part of Name)
+  - [ASCIIString] Item Name
+  - [32-bit] Item Price
+  - [32-bit] Gift Value
+  - [16-bit?] ?? ??
+
+0x0B1D945C - Start of Battle Attack Magic Table (Each BAM starts with 70h)
+  - [32-bit] 70 00 00 00 ?
+  - [8-bit] Table ID
+  - [8-bit] ??
+  - [16-bit] Icon ID (Part of Name)
+  - [ASCIIString] Spell Name
+  - [32-bit] Spell Price
+  - [16-bit] Spell Potency/Damage
+  - [32-bit] Spell Animation Pointer ?
+  - [16-bit] ?? ??
+
+0x0B1D970C - Start of Battle Defense Magic Table (Each BDM starts with 72h)
+  - [32-bit] 72 00 00 00 ?
+  - [8-bit] Table ID
+  - [8-bit] ??
+  - [16-bit] Icon ID (Part of Name)
+  - [ASCIIString] Spell Name
+  - [32-bit] Spell Price
+  - [16-bit] Spell Potency
+  - [2x 8-bit] ??, ??
+  - [32-bit] ?? ?? ?? ??
+
+0x0B1D9964 - Start of Field Magic Table (Each FM starts with 74h)
+  - [32-bit] 74 00 00 00 ?
+  - [8-bit] Table ID
+  - [8-bit] ??
+  - [16-bit] Icon ID (Part of Name)
+  - [ASCIIString] Item Name
+  - [32-bit] Item Price
+  - [16-bit] Item Potency
+  - [2x 8-bit] ??, ??
+  - [32-bit] ?? ?? ?? ??
+
+0x0B1D9304 - Start of Battle Magic Element Table (Each ability starts with 8Ah)
+  - [32-bit] 8A 00 00 00 ?
+  - [8-bit] Table ID
+  - [8-bit] ??
+  - [16-bit] Icon ID (Part of Name)
+  - [ASCIIString] Name
+
+0x0B1D93C0 - Start of Field Magic Element Table (Each ability starts with 8Bh)
+  - [32-bit] 8B 00 00 00 ?
+  - [8-bit] Table ID
+  - [8-bit] ??
+  - [16-bit] Icon ID (Part of Name)
+  - [ASCIIString] Name
+
+[Map Data]
+0x0B1C4A20 - Start of Location Table (Each location starts with 37h)
+
+0x0B1C4DC0 - Start of Space Table (Each space starts with 87h)
+
+0x0B1C5724 - Start of Town Table (Each town starts with 6Dh)
+
+0x0B1C84CC - Start of Item Space Tables
+  - [16-bit] Sub-Table Size
+  - [16-bit] Menu Slot Count
+  - [8-bit] Item ID
+  - [8-bit] Table ID
+  
+[Character Data]
+0x0B1DCAB8 - Start of Player Class Table (Each class starts with 42h)
+  - [32-bit] 42 00 00 00 ?
+  - [32-bit] Table ID
+  - [ASCIIString] Class Name
+
+0x0B1DCB8C - Start of Player Class Initialize Table (Each starting point starts with 3Ch)
+  - [32-bit] 3C 00 00 00 ?
+  - [8-bit] Table ID
+  - [8-bit] Gender ID
+  - [4x 8-bit] ??, ??, ??, ??
+  - [16-bit] Starting HP Value?
+
+0x0B1DCCAC - Start of Player Class Base Stats (Each base starts with 40h)
+  - [32-bit] 40 00 00 00 ?
+  - [8-bit] Class ID
+  - [8-bit] Gender ID
+  - [16-bit] Attack Value
+  - [16-bit] Defense Value
+  - [16-bit] Magic Value
+  - [16-bit] Speed Value
+  - [16-bit] HP Value
+  
+0x0B1DCE0C - Start of Player Class Level-Up Bonus Stats Table (Each bonus starts with 3Bh)
+  - [32-bit] 3B 00 00 00 ?
+  - [8-bit] Class ID
+  - [8-bit] Gender ID
+  - [16-bit] Attack Bonus
+  - [16-bit] Defense Bonus
+  - [16-bit] Magic Bonus
+  - [16-bit] Speed Bonus
+  - [16-bit] HP Bonus
+  - [5x 16-bit] ?? ??, ?? ??, ?? ??, ?? ??, ?? ??
+
+0x0B1DD0AC - Start of Player Class Carrying Capacity Table (Each subtable starts with 44h)
+  - [32-bit] 44 00 00 00 ?
+  - [8-bit] Class ID
+  - [8-bit] Gender ID
+  - [8-bit] Consumable Item Carry Limit
+  - [8-bit] Field Magic Carry Limit
+
+0x0B1DD20C - Start of Player Class Salary Table (Each subtable starts with 2Eh)
+  - [32-bit] 2E 00 00 00 ?
+  - [8-bit] Class ID
+  - [8-bit] Gender ID
+  - [16-bit] ?? ??
+  - [32-bit] Class Salary
+  - [2x 16-bit] Salary Bonuses?
+
+0x0B1DA204 - Start of Ability Table (Each ability starts with 7Ah)
+  - [32-bit] 7A 00 00 00 ?
+  - [8-bit] Table ID
+  - [8-bit] Percent Chance of Working
+  - [16-bit] Ability Effect?
+
+0x0B1DF888 - Start of Monster Table (Each monster starts with 50h)
+  - [32-bit] 50 00 00 00 ?
+  - [8-bit] Table ID
+  - [8-bit] ??
+  - [8-bit] Monster Level
+  - [8-bit] ??
+  - [ASCIIString] Name
+  - [16-bit] HP Value
+  - [16-bit] Attack Value
+  - [16-bit] Defense Value
+  - [16-bit] Speed Value
+  - [16-bit] Magic Value
+  - [3x 16-bit] ?? ??, ?? ??, ?? ??
+  - [16-bit] Experience Value
+  - [16-bit] Gold Value
+
+0x0B1E0CD8 - Start of Monster Drop Tables (Each drop table starts with 53h)
+  - [32-bit] 53 00 00 00 ?
+  - [8-bit] Monster ID
+  - [8-bit] Drop #1 Chance
+  - [8-bit] Drop #2 Chance
+  - [8-bit] ??
+  - [16-bit] Drop #1 ID
+  - [16-bit] Drop #2 ID

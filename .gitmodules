@@ -7,3 +7,129 @@
 [submodule "references/universal-pokemon-randomizer-zx"]
 	path = references/universal-pokemon-randomizer-zx
 	url = https://github.com/Ajarmar/universal-pokemon-randomizer-zx
+[submodule "references/actraiser-randomizer"]
+	path = references/actraiser-randomizer
+	url = https://github.com/Osteoclave/actraiser-randomizer
+[submodule "references/superadventureisland2-randomizer"]
+	path = references/superadventureisland2-randomizer
+	url = https://github.com/abyssonym/sai2_rando
+[submodule "references/aerobiz"]
+	path = references/aerobiz
+	url = https://github.com/stochaztic/aerobonkers
+[submodule "references/atlantisnonazo-randomizer"]
+	path = references/atlantisnonazo-randomizer
+	url = https://github.com/Ryason55/gnazo_randomizer
+[submodule "references/axiomverge"]
+	path = references/axiomverge
+	url = https://github.com/pozzum/axiomrandomizer
+[submodule "references/azuredreams"]
+	path = references/azuredreams
+	url = https://github.com/programmar-r/programmar-r.github.io
+[submodule "references/banjo-kazooie"]
+	path = references/banjo-kazooie
+	url = https://github.com/CyrusKashef/BK_Randomizer
+[submodule "references/bravelyrandomize"]
+	path = references/bravelyrandomize
+	url = https://github.com/MarvinXLII/BravelyRandomize
+[submodule "references/bravelyrandomize2"]
+	path = references/bravelyrandomize2
+	url = https://github.com/MarvinXLII/BravelyRandomize2
+[submodule "references/breathoffire2"]
+	path = references/breathoffire2
+	url = https://github.com/abyssonym/painsong
+[submodule "references/breathoffire3"]
+	path = references/breathoffire3
+	url = https://github.com/abyssonym/vast_violence
+[submodule "references/captaincomic"]
+	path = references/captaincomic
+	url = https://www.bamsoftware.com/git/comic.git
+[submodule "references/castlevania2SQ"]
+	path = references/castlevania2SQ
+	url = https://github.com/tonylukasavage/cv2r
+[submodule "references/castlevania2deadlycurse"]
+	path = references/castlevania2deadlycurse
+	url = https://github.com/abyssonym/deadly_curse
+[submodule "references/sotn-relic-randomizer"]
+	path = references/sotn-relic-randomizer
+	url = https://github.com/josephstevenspgh/SotN-Relic-Randomizer/
+[submodule "references/sotn-randomizer"]
+	path = references/sotn-randomizer
+	url = https://github.com/3snowp7im/SotN-Randomizer
+[submodule "references/sotnrandotools"]
+	path = references/sotnrandotools
+	url = https://github.com/TalicZealot/SotnRandoTools/
+[submodule "references/castlevania-circleofthemoon"]
+	path = references/castlevania-circleofthemoon
+	url = https://github.com/calm-palm/cotm-randomizer
+[submodule "references/aosrando"]
+	path = references/aosrando
+	url = https://github.com/abyssonym/aos_rando
+[submodule "references/elitesoba-aosrando"]
+	path = references/elitesoba-aosrando
+	url = https://github.com/EliteSoba/aos_rando
+[submodule "references/aosrando2"]
+	path = references/aosrando2
+	url = https://github.com/tukkek/aos_rando
+[submodule "references/dsvedit"]
+	path = references/dsvedit
+	url = https://github.com/LagoLunatic/dsvedit
+[submodule "references/dsvrandom"]
+	path = references/dsvrandom
+	url = https://github.com/LagoLunatic/dsvrandom
+[submodule "references/wwrando"]
+	path = references/wwrando
+	url = https://github.com/LagoLunatic/wwrando
+[submodule "references/celesterandomizer"]
+	path = references/celesterandomizer
+	url = https://github.com/rhelmot/CelesteRandomizer
+[submodule "references/chronotrigger-eternalnightmare"]
+	path = references/chronotrigger-eternalnightmare
+	url = https://github.com/abyssonym/eternalnightmare
+[submodule "references/chronotrigger-jetsoftime"]
+	path = references/chronotrigger-jetsoftime
+	url = https://github.com/Anskiy/jetsoftime
+[submodule "references/chronotrigger-wingsoftime"]
+	path = references/chronotrigger-wingsoftime
+	url = https://github.com/Anskiy/wingsoftime
+[submodule "references/cevo-mapgen"]
+	path = references/cevo-mapgen
+	url = https://github.com/samboy/c-evo-mapgen
+[submodule "references/commanderkeen1rando"]
+	path = references/commanderkeen1rando
+	url = https://github.com/sulix/randkeen
+[submodule "references/crashtagteamracing"]
+	path = references/crashtagteamracing
+	url = https://github.com/CDRomatron/CTTRRando
+[submodule "references/crazy-castle-random"]
+	path = references/crazy-castle-random
+	url = https://github.com/MaximumLance/Crazy-Castle-Randomizer
+[submodule "references/crystal-project-random"]
+	path = references/crystal-project-random
+	url = https://github.com/LtSquigs/crystal-project-randomizer
+[submodule "references/crystalis-rando"]
+	path = references/crystalis-rando
+	url = https://github.com/crystalis-randomizer/crystalis-randomizer
+[submodule "references/darksoulsitemrando"]
+	path = references/darksoulsitemrando
+	url = https://github.com/HotPocketRemix/DarkSoulsItemRandomizer
+[submodule "references/parandomizer"]
+	path = references/parandomizer
+	url = https://github.com/Poppyanimal/Paramdomizer
+[submodule "references/darkestdungeonrandom"]
+	path = references/darkestdungeonrandom
+	url = https://github.com/TheUnlocked/DarkestDungeonRandomizer
+[submodule "references/deusex-random"]
+	path = references/deusex-random
+	url = https://github.com/Die4Ever/deus-ex-randomizer/
+[submodule "references/diablo2-modmaker"]
+	path = references/diablo2-modmaker
+	url = https://github.com/tlentz/d2modmaker
+[submodule "references/diablo2-modgenerator"]
+	path = references/diablo2-modgenerator
+	url = https://github.com/mapron/d2modgen
+[submodule "references/digimonworld-rando"]
+	path = references/digimonworld-rando
+	url = https://github.com/meekrhino/digimon_world_randomizer
+[submodule "references/dkc3random"]
+	path = references/dkc3random
+	url = https://github.com/pozzum/DKC3Randomizer
