@@ -1,0 +1,9 @@
+[submodule "references/UPRSpeedchoice"]
+	path = references/UPRSpeedchoice
+	url = https://github.com/Dabomstew/UPR-Speedchoice
+[submodule "references/universal-pokemon-randomizer"]
+	path = references/universal-pokemon-randomizer
+	url = https://github.com/Dabomstew/universal-pokemon-randomizer
+[submodule "references/universal-pokemon-randomizer-zx"]
+	path = references/universal-pokemon-randomizer-zx
+	url = https://github.com/Ajarmar/universal-pokemon-randomizer-zx
