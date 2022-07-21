@@ -1,0 +1,698 @@
+<!--
+
+USAGE INSTRUCTIONS:
+
+Save this content to an HTML file, then open the local file in your browser
+and use window capture, or use an OBS BrowserSource.
+
+Scroll down a few lines to the section marked "***** configuration *****" for
+additional options for customizing the overlay's appearance.
+
+To put character X into a slot, first click the small sprite of character X to 
+highlight it, then click the desired slot.
+
+To clear a slot, double click on the large sprite.
+
+Small sprites will appear dimmed while that character occupies a slot; you can
+tell which characters you have not yet encountered by looking for the small
+sprites that are not dimmed.
+
+Click on a slot containing Rydia to toggle between child/adult Rydia.
+
+When using an OBS BrowserSource, the page may appear blank on first load.
+If so, click the "Refresh cache of current page" button in the source properties 
+to get it to display correctly. I'm not sure what causes this problem. :\ 
+
+When using a BrowserSource, you must right-click the overlay and select
+"Interact" in order to be able to manipulate it.
+
+-->
+
+<html>
+    <head>
+        <title>Lunarian Shuffle Overlay</title>
+
+        <script>
+            /* ******* configuration ******* */
+            //
+            // Set the desired parameters in CONFIG below. The following
+            // settings are supported:
+            //
+            //    theme : 'light'     - for using overlay on light backgrounds
+            //    theme : 'dark'      - for using overlay on dark backgrounds
+            //    rows : N            - use a row-based layout with N rows
+            //                           (1 to 3 rows supported)
+            //    columns : N         - use a column-based layout with N columns
+            //                           (1 to 4 columns supported)
+            //    order : 'vertical'  - when using column-based layouts, order
+            //                           the slots from top-to-bottom
+            //    scale : N           - scale entire page by a factor of N.
+            //                           (Usually you'd just stretch the overlay
+            //                           in OBS as needed, but you may need this
+            //                           if you want crisper pixels)
+            //    hidecontrols : 1    - if specified, the additional control
+            //                           panel beneath the overlay area will be
+            //                           hidden.
+            //
+            // Note that if you are hosting this file on a web server, you can
+            // also specify the config with URL parameters, eg:
+            //
+            //      http://yourserver.com/overlay.html?theme=light&rows=1
+            //
+            // Additionally, when hosting this overlay on a server, your slot
+            // assignments will be saved in your browser cookies.
+            //
+            
+            var CONFIG = {
+                theme: 'dark',
+                rows: 2,
+                scale: 2,
+                hidecontrols: 0
+            }
+        </script>
+
+        <style>
+            body {
+                image-rendering: -moz-crisp-edges;
+            }
+
+            #slots {
+                display:flex;
+                opacity: 0;
+            }
+
+            img {
+                image-rendering: pixelated;
+            }
+
+            img.slot {
+                width:16px;
+                height:24px;
+            }
+
+            img.palette {
+                width:16px;
+                height:16px;
+                border: 1px solid rgba(0,0,0,0);
+            }
+
+            img.palette.used {
+                opacity: 1.0;
+            }
+
+            body.dark img.palette.selected {
+                border: 1px solid #fe2;
+            }
+
+            body.light img.palette.selected {
+                border: 1px solid #fd2;
+            }
+
+            #controls {
+                margin-top:16px;
+                font-size:12px;
+                opacity: 0;
+            }
+
+            #controls input {
+                opacity: 0.15;                
+            }
+
+            #controls input:hover {
+                opacity: 1.0;
+            }
+
+            /*** row layouts ***/
+            #slots.rows {
+                justify-content:center;                
+            }
+
+            #slots.rows div.slot {
+                text-align:center;
+                width:20px;
+                margin-bottom:6px;
+            }
+
+            #slots.rows.x1 { flex-wrap:nowrap; width:260px; }
+
+            #slots.rows.x2 { width:150px; flex-wrap:wrap; }
+
+            #slots.rows.x3 { width:110px; flex-wrap:wrap; }
+            #slots.rows.x3 #slot_0 { margin-left: 10px; }
+            #slots.rows.x3 #slot_3 { margin-right: 10px; }
+
+            #slots.rows.x4 { width:90px; flex-wrap:wrap; }
+            #slots.rows.x4 #slot_4 { margin-left: 10px; }
+            #slots.rows.x4 #slot_6 { margin-right: 10px; }
+            #slots.rows.x4 #slot_7 { margin-left: 10px; }
+            #slots.rows.x4 #slot_9 { margin-right: 10px; }
+
+            /*** column layouts ***/
+            #slots.columns div.slot {
+                display:flex;
+                flex-direction:column-reverse;
+                flex-wrap:wrap;
+                align-items:flex-end;
+                height:26px;
+                width:32px;
+                margin-right:4px;
+                margin-bottom:2px;
+            }
+
+            #slots.columns img.palette {
+                width:12px;
+                height:12px;
+                image-rendering: auto;
+            }
+
+            #slots.customscale img.palette {
+                image-rendering: pixelated;
+            }
+
+            #slots.columns {
+                flex-wrap: wrap;
+            }
+
+            #slots.columns.x1 { width: 40px; }
+            #slots.columns.x2 { width: 80px; }
+            #slots.columns.x3 { width: 120px; }
+            #slots.columns.x4 { width: 150px; }
+
+            #slots.columns.verticalorder {
+                flex-direction: column;
+                align-content: flex-start;
+            }
+
+            #slots.columns.verticalorder.x1 { height: 365px; flex-wrap: nowrap; }
+            #slots.columns.verticalorder.x2 { height: 200px; flex-wrap: wrap; }
+            #slots.columns.verticalorder.x3 { height: 144px; flex-wrap: wrap; }
+            #slots.columns.verticalorder.x3 #slot_8 { margin-bottom: 20px;}
+            #slots.columns.verticalorder.x4 { height: 115px; flex-wrap: wrap; }
+
+
+            /*** light/dark themes ***/
+            body.light { background-color:#fcfcfc; }
+            body.dark { background-color:#222; }
+            body.light img.arrow { opacity: 0.4; }
+            body.dark img.arrow { opacity: 0.8; }
+
+        </style>
+    </head>
+
+    <body class="dark test">
+        <div id="slots" class="slots rows x1">
+            <div class="slot" id="slot_0">
+                <img class="palette dkcecil" id="palette_0" onclick="paletteClicked(0);">
+                <img class="arrow" id="arrow_0">
+                <img class="slot" id="slot_occupant_0" onclick="slotClicked(0);" ondblclick="slotDoubleClicked(0);">
+            </div>
+            <div class="slot" id="slot_1">
+                <img class="palette kain" id="palette_1" onclick="paletteClicked(1);">
+                <img class="arrow" id="arrow_1">
+                <img class="slot" id="slot_occupant_1" onclick="slotClicked(1);" ondblclick="slotDoubleClicked(1);">
+            </div>
+            <div class="slot" id="slot_2">
+                <img class="palette rydia" id="palette_2" onclick="paletteClicked(2);">
+                <img class="arrow" id="arrow_2">
+                <img class="slot" id="slot_occupant_2" onclick="slotClicked(2);" ondblclick="slotDoubleClicked(2);">
+            </div>
+            <div class="slot" id="slot_3">
+                <img class="palette tellah" id="palette_3" onclick="paletteClicked(3);">
+                <img class="arrow" id="arrow_3">
+                <img class="slot" id="slot_occupant_3" onclick="slotClicked(3);" ondblclick="slotDoubleClicked(3);">
+            </div>
+            <div class="slot" id="slot_4">
+                <img class="palette edward" id="palette_4" onclick="paletteClicked(4);">
+                <img class="arrow" id="arrow_4">
+                <img class="slot" id="slot_occupant_4" onclick="slotClicked(4);" ondblclick="slotDoubleClicked(4);">
+            </div>
+            <div class="slot" id="slot_5">
+                <img class="palette rosa" id="palette_5" onclick="paletteClicked(5);">
+                <img class="arrow" id="arrow_5">
+                <img class="slot" id="slot_occupant_5" onclick="slotClicked(5);" ondblclick="slotDoubleClicked(5);">
+            </div>
+            <div class="slot" id="slot_6">
+                <img class="palette yang" id="palette_6" onclick="paletteClicked(6);">
+                <img class="arrow" id="arrow_6">
+                <img class="slot" id="slot_occupant_6" onclick="slotClicked(6);" ondblclick="slotDoubleClicked(6);">
+            </div>
+            <div class="slot" id="slot_7">
+                <img class="palette palom" id="palette_7" onclick="paletteClicked(7);">
+                <img class="arrow" id="arrow_7">
+                <img class="slot" id="slot_occupant_7" onclick="slotClicked(7);" ondblclick="slotDoubleClicked(7);">
+            </div>
+            <div class="slot" id="slot_8">
+                <img class="palette porom" id="palette_8" onclick="paletteClicked(8);">
+                <img class="arrow" id="arrow_8">
+                <img class="slot" id="slot_occupant_8" onclick="slotClicked(8);" ondblclick="slotDoubleClicked(8);">
+            </div>
+            <div class="slot" id="slot_9">
+                <img class="palette pcecil" id="palette_9" onclick="paletteClicked(9);">
+                <img class="arrow" id="arrow_9">
+                <img class="slot" id="slot_occupant_9" onclick="slotClicked(9);" ondblclick="slotDoubleClicked(9);">
+            </div>
+            <div class="slot" id="slot_10">
+                <img class="palette cid" id="palette_10" onclick="paletteClicked(10);">
+                <img class="arrow" id="arrow_10">
+                <img class="slot" id="slot_occupant_10" onclick="slotClicked(10);" ondblclick="slotDoubleClicked(10);">
+            </div>
+            <div class="slot" id="slot_11">
+                <img class="palette edge" id="palette_11" onclick="paletteClicked(11);">
+                <img class="arrow" id="arrow_11">
+                <img class="slot" id="slot_occupant_11" onclick="slotClicked(11);" ondblclick="slotDoubleClicked(11);">
+            </div>
+            <div class="slot" id="slot_12">
+                <img class="palette fusoya" id="palette_12" onclick="paletteClicked(12);">
+                <img class="arrow" id="arrow_12">
+                <img class="slot" id="slot_occupant_12" onclick="slotClicked(12);" ondblclick="slotDoubleClicked(12);">
+            </div>
+        </div>
+
+        <div id="controls">
+            <input type="button" id="resetSlots" value="Reset" onclick="resetSlots();" />
+            <input type="button" id="undoResetSlots" value="Undo reset" onclick="undoResetSlots();" style="display:none;" />
+        </div>
+
+        <script>
+            var characters = ['dkcecil', 'kain', 'rydia', 'tellah', 'edward', 'rosa', 'yang', 'palom', 'porom', 'pcecil', 'cid', 'edge', 'fusoya', 'adultrydia'];
+
+            var slotOccupants = new Array();
+            var slotOccupantsBeforeReset = null;
+            for(var i=0; i<characters.length-1; i++) { 
+                slotOccupants.push(null); 
+            }
+
+            var selectedPaletteIndex = null;
+
+            var showAltRydia = false;
+            var showAltRydiaBeforeReset = null;
+
+            function addClassName(elem, className)
+            {
+                if(typeof(elem) == "string")
+                {
+                    var elem = document.getElementById(elem);
+                }
+
+                if(elem)
+                {
+                    var classNames = elem.className.split(" ");
+                    if(classNames.indexOf(className) < 0)
+                    {
+                        elem.className = elem.className + " " + className;
+                    }
+                }
+            }
+
+            function removeClassName(elem, className)
+            {
+                if(typeof(elem) == "string")
+                {
+                    var elem = document.getElementById(elem);
+                }
+
+                if(elem)
+                {
+                    var classNames = elem.className.split(" ");
+                    var index = classNames.indexOf(className)
+                    if(index >= 0)
+                    {
+                        classNames.splice(index, 1);
+                        elem.className = classNames.join(" ");
+                    }
+                }                
+            }
+
+            function paletteClicked(index)
+            {
+                if(index === selectedPaletteIndex)
+                {
+                    selectPalette(null);
+                }
+                else
+                {
+                    selectPalette(index);
+                }
+            }
+
+            function selectPalette(paletteIndex)
+            {
+                if(paletteIndex === selectedPaletteIndex)
+                {
+                    return;
+                }
+
+                if(selectedPaletteIndex !== null)
+                {
+                    removeClassName("palette_" + selectedPaletteIndex, "selected");
+                }
+
+                selectedPaletteIndex = paletteIndex;
+                if(paletteIndex !== null)
+                {
+                    addClassName("palette_" + paletteIndex, "selected");
+                }
+            }
+
+            function slotClicked(index)
+            {
+                if(selectedPaletteIndex === null)
+                {
+                    if(slotOccupants[index] === characters.indexOf("rydia"))
+                    {
+                        setSlotOccupant(index, characters.indexOf("adultrydia"));
+                        saveSlotsToCookie();
+                    }
+                    else
+                    {
+                        if(slotOccupants[index] === characters.indexOf("adultrydia"))
+                        {
+                            setSlotOccupant(index, characters.indexOf("rydia"));
+                            saveSlotsToCookie();
+                        }
+                    }
+
+                    return;
+                }
+
+                if(slotOccupants[index] === selectedPaletteIndex)
+                {
+                    setSlotOccupant(index, null);
+                }
+                else
+                {
+                    setSlotOccupant(index, selectedPaletteIndex);
+                }
+
+                removeClassName("palette_" + selectedPaletteIndex, "selected");
+                selectedPaletteIndex = null;
+
+                disableUndoReset();
+            }
+
+            function slotDoubleClicked(index)
+            {
+                setSlotOccupant(index, null);
+                disableUndoReset();
+            }
+
+            function setSlotOccupant(slotIndex, occupantIndex)
+            {
+                var slotOccupantElem = document.getElementById("slot_occupant_" + slotIndex);
+                var previousOccupant = slotOccupants[slotIndex];
+
+                if(previousOccupant !== null)
+                {
+                    removeClassName(slotOccupantElem, characters[previousOccupant]);
+                    slotOccupantElem.src = EMPTY_SLOT_IMAGE;
+                    slotOccupants[slotIndex] = null;
+                }
+
+                if(occupantIndex !== null)
+                {
+                    slotOccupants[slotIndex] = occupantIndex;
+                    var occupantName = characters[occupantIndex];
+                    addClassName(slotOccupantElem, occupantName);
+                    if(occupantName === 'adultrydia')
+                    {
+                        slotOccupantElem.src = SLOT_ALT_IMAGES["rydia"];
+                    }
+                    else
+                    {
+                        slotOccupantElem.src = SLOT_IMAGES[occupantName];
+                    }
+                }
+
+                saveSlotsToCookie();
+            }
+
+            function setShowAltRydia(shouldShow)
+            {
+                showAltRydia = shouldShow;
+                for(var i=0; i<slotOccupants.length; i++)
+                {
+                    if(slotOccupants[i] !== null && characters[slotOccupants[i]] === 'rydia')
+                    {
+                        document.getElementById("slot_occupant_" + i).src = (showAltRydia ? SLOT_ALT_IMAGES["rydia"] : SLOT_IMAGES["rydia"]);
+                    }
+                }
+            }
+
+            function resetSlots()
+            {
+                slotOccupantsBeforeReset = new Array();
+                for(var i=0; i<slotOccupants.length; i++)
+                {
+                    slotOccupantsBeforeReset.push(slotOccupants[i]);
+                }
+
+                for(var i=0; i<slotOccupants.length; i++)
+                {
+                    setSlotOccupant(i, null);
+                }
+
+                showAltRydiaBeforeReset = showAltRydia;
+                setShowAltRydia(false);
+                saveSlotsToCookie();
+
+                document.getElementById("resetSlots").style.display = "none";
+                document.getElementById("undoResetSlots").style.display = "inline";
+            }
+
+            function undoResetSlots()
+            {
+                if(slotOccupantsBeforeReset !== null)
+                {
+                    for(var i=0; i<slotOccupantsBeforeReset.length; i++)
+                    {
+                        setSlotOccupant(i, slotOccupantsBeforeReset[i]);
+                    }
+                }
+
+                if(setShowAltRydia !== false)
+                {
+                    setShowAltRydia(showAltRydiaBeforeReset);
+                }
+
+                saveSlotsToCookie();
+
+                disableUndoReset();
+            }
+
+            function disableUndoReset()
+            {
+                slotOccupantsBeforeReset = null;
+                showAltRydiaBeforeReset = null;
+                document.getElementById("resetSlots").style.display = "inline";
+                document.getElementById("undoResetSlots").style.display = "none";
+            }
+
+            function saveSlotsToCookie()
+            {
+                document.cookie = "slots=" + slotOccupants.join(".") + "|" + showAltRydia.toString() + "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
+            }
+
+            function loadSlotsFromCookie()
+            {
+                if(document.cookie)
+                {
+                    var cookiePairs = document.cookie.split(";");
+                    for(var c=0; c<cookiePairs.length; ++c)
+                    {
+                        var parts = cookiePairs[c].trim().split("=");
+                        if(parts[0] == "slots")
+                        {
+                            var subParts = parts[1].split("|");
+
+                            var assignments = subParts[0].split(".");
+                            for(var i=0; i<characters.length-1; ++i)
+                            {
+                                removeClassName("palette_" + i, "used");
+                            }
+
+                            for(var i=0; i<assignments.length; ++i)
+                            {
+                                var slotOccupantElem = document.getElementById("slot_occupant_" + i);
+
+                                if(assignments[i] == '')
+                                {
+                                    slotOccupants[i] = null;
+                                    slotOccupantElem.className = "slot";
+                                    slotOccupantElem.src = EMPTY_SLOT_IMAGE;
+                                }
+                                else
+                                {
+                                    var occupantIndex = parseInt(assignments[i]);
+                                    slotOccupants[i] = occupantIndex;
+                                    addClassName(slotOccupantElem, characters[occupantIndex]);
+                                    if(characters[occupantIndex] == "adultrydia")
+                                    {
+                                        slotOccupantElem.src = SLOT_ALT_IMAGES["rydia"];
+                                    }
+                                    else
+                                    {
+                                        slotOccupantElem.src = SLOT_IMAGES[characters[occupantIndex]];
+                                    }
+                                    
+                                }
+                            }
+
+                            setShowAltRydia(subParts[1] == "true");
+
+                            break;
+                        }
+                    }
+                }
+            }
+
+            function initialize()
+            {
+                var queryVars = new Object();
+
+                if(location.search)
+                {
+                    var queryStrings = location.search.substr(1).split('&');
+                    for(var i=0; i<queryStrings.length; i++)
+                    {
+                        var queryString = queryStrings[i].trim();
+                        if(queryString)
+                        {
+                            if(queryString.indexOf('=') > 0)
+                            {
+                                var parts = queryString.split('=');
+                                queryVars[parts[0].toLowerCase()] = parts[1];
+                            }
+                            else
+                            {
+                                queryVars[queryString.toLowerCase()] = true;
+                            }
+                        }
+                    }
+                }
+
+                if(queryVars.theme) { CONFIG.theme = queryVars.theme; }
+                if(queryVars.dark) { CONFIG.theme = 'dark'; }
+                if(queryVars.light) { CONFIG.theme = 'light'; }
+                if(queryVars.rows) { CONFIG.rows = queryVars.rows; delete CONFIG.columns; }
+                if(queryVars.columns) { CONFIG.columns = queryVars.columns; delete CONFIG.rows; }
+                if(queryVars.order) { CONFIG.order = queryVars.order; }
+                if(queryVars.scale) { CONFIG.scale = parseFloat(queryVars.scale); }
+                if(queryVars.hidecontrols) { CONFIG.hidecontrols = queryVars.hidecontrols };
+
+                var bodyClass = (CONFIG.theme ? CONFIG.theme : 'dark');
+                if(queryVars.test)
+                {
+                    bodyClass += " test";
+                }
+                document.body.className = bodyClass;
+
+                var slotsElem = document.getElementById("slots");
+                if(CONFIG.rows)
+                {
+                    slotsElem.className = "rows x" + CONFIG.rows;
+                }
+                else if(CONFIG.columns)
+                {
+                    slotsElem.className = "columns x" + CONFIG.columns;
+                    if(CONFIG.order && CONFIG.order.toLowerCase() == 'vertical') 
+                    {
+                        slotsElem.className += " verticalorder";
+                    }
+                }
+                else
+                {
+                    slotsElem.className = "rows x2";
+                }
+
+                if(CONFIG.scale)
+                {
+                    var scale = parseFloat(CONFIG.scale);
+                    if(scale > 0)
+                    {
+                        document.body.style.transformOrigin = "0 0";
+                        document.body.style.transform = "scale(" + scale + ")";
+                        if(scale > 2.5)
+                        {
+                            slotsElem.className += " customscale";
+                        }
+                    }
+                }
+
+                if(CONFIG.hidecontrols)
+                {
+                    document.getElementById("controls").style.display = 'none';
+                }
+
+                var arrowSrc = ARROW_IMAGES[(CONFIG.theme ? CONFIG.theme : 'dark') + "." + (CONFIG.columns ? 'columns' : 'rows')];
+
+                for(var i=0; i<characters.length-1; ++i)
+                {
+                    document.getElementById("palette_" + i).src = PALETTE_IMAGES[characters[i]]; //document.getElementById("imgsrc.palette." + characters[i]).src;
+                    document.getElementById("slot_occupant_" + i).src = EMPTY_SLOT_IMAGE;
+                    document.getElementById("arrow_" + i).src = arrowSrc;
+                }
+
+                loadSlotsFromCookie();
+
+                document.getElementById("slots").style.opacity = 1;
+                document.getElementById("controls").style.opacity = 1;
+            }
+
+            window.onload = function() {
+                // For some reason, OBS BrowserSource doesn't like it sometimes if we try to initialize right away.
+                // So inserting a delay makes it work, somehow?
+                setTimeout(initialize, 100);
+            };
+
+            //------------------------------------------------------------------------------------------------------------------------------------------------------
+
+            var PALETTE_IMAGES = {
+                "cid" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAM9JREFUOE+1ksEVwyAMQxmNMXpkpIzQETpKjx0hI3AjKPATG8ixeU+pZUsKBUIMZUJ99Cr51QBfaqdGFaYtl/cvl32LZ4C4sArxpJv1S53S9+a9dh5rZrkSjkY4mscACbV8AaPl/wsgRMD4xJ3Hmj+pAaFOQYDbuQuwAhnGIDgz+t3rB3wVE6BvNaqvABqjAdBHY+5LaDtcGwgQWdBnM02vpfElhtNJ6FYON9NtIstUrbPmvM+gamSVGMFd1MEKNsAGTwFXYwiQgb+HGcRQwgFyx8MQUfowiAAAAABJRU5ErkJggg==",
+                "dkcecil" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAMtJREFUOE+NkdENwyAMRDNaR2GUjJAROkJHyWdH6Aj5oz6HgwOMlEQnG8fvbJQtb/ske/L7e2VEzcPeqWCllM6cjqvFkkcm/YGwCVOharAwCQ0QIRrw/NiAjZw81juGICPEZl2dsPaWeE9C9FwaR7DLG9PuyuIn3U2/4+XSmptaH3+tvW11FQAaEIZogNxZGugHRtVYA9cZYEo0ySV355Umg2hV5n6WDQhXA5pEWq1eualQIN1Az1P/WPBiAR020H/zUwOFIYDra+zbH2TYsThPYPY5AAAAAElFTkSuQmCC",
+                "edge" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAANVJREFUOE91kMsRwjAMRF1ayuDoklICJVAKR0qghNyCV/ETa2OY2dF3nxzKVs5B7XcSUd2PiPNu7A2FLSui++vbm0FpJGrZjR5nc3gyaUMJ80oAiAnQBQZafO9bymvN3bwEKGfRQfTc3D3XVYe4wXPpB4Cp1md+p3JFv05vCYikDaVHvSLAUDczkwYATYQhIJYrCnLcrr0BoEE+165GLVD/POkvwJ8IZDZzBEjTUIS4HpBuJnJkAPhl6vk1804CVn+ixFNlVL46ErkALl+SAMx9aStn+QDB7KhQHpxcSwAAAABJRU5ErkJggg==",
+                "edward" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAM1JREFUOE99k8ERwjAMBFMWZVACpeTJkxJ4UgYlUAJl5Gd8Gq9ydkw8s6NI1p0z1ngpy3qgrjJCfXtdg6y5MJu2bzQ8Lvfyvj0DxIoi+2diUI6JogtT0yWDASZA3mm6pDWJTy15hL8GB3G7LKHc991kaqDvyO3SvOYmIXYDmrK5fedfnBk4iN3ESd0o1rg4zVGNUfpItSLxk7hE38OUiEll35iJZnXFzsCSgFN8KtTg1EA5Av7ADbSfmtkEBA8Ig/EQkVNwxiZ/jbD3r8sPV9rOMNMM4uEAAAAASUVORK5CYII=",
+                "fusoya" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAMJJREFUOE+VkMERwyAMBCktpVBKSnAJKSGl5JkSUoJ/hCMsczLwiGduEJJuJZxKui9Vv+Ja9Ujx0ht1fo5bkNeCZwQ1fLzP1vjMM0A575kADkGYPefm5gmXes3Hud1AtS1ABaawLmbFyq22+AugDZYANzsEANOXAMwq0rCT14EMAKc3soHnOAeAJyBvcnnOIc3MJMU+aQdiUADw53N+Bcj1VL0b5yc0c5cMiLvXAwBIK/YpEgAGuIaPAMhKDXpZ/6dUvsIIKoetKmzoAAAAAElFTkSuQmCC",
+                "kain" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAANxJREFUOE91ksEVwjAMQzMaY3DMKB2BERiBUTgyAiP0ViLT7you8J6IneirLqRtbWnjs0mqve+3dev9GfWv86jZuL/WNK7XAQ/QpT3O8WZADQFwWGuFpwBCMAa8v4LvORzM1Mg0IMx6mpQB+9nEANYAKWDrPcDWGZIe/aj/7SVDmo+KWavXWnk11SECqgS8b5cQsFR/yO+XAWEqr8RenfAUwAFm/xcI1UO4VBlASJWDLiadAjzIx43egvCkn4IDjef33oN89GS8iY3djBTgoSf/1BiINLrfEelglvYBgnKr8Gx++CcAAAAASUVORK5CYII=",
+                "palom" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAMVJREFUOE99kssNwyAQRCklpaSEHHNMKSkhJaQEl+cbYbAeGXaxLY1YlpnHRy61vIfaV7dXqZ/9VlVHuberdcZEBoUZV0oQAFrYv48UVk+iThABzsIeok4QAAhzFMElgOMAYPQdvT4FAJFkXtVT+AqA2Jma/hLQTc9/kDEC7ptBAKgRRXiCtA0E4EebADJxR07iIozUSwB2ksEDXmt9PKYDWMQoAWWuo2vsYX8DIIiAS+FLwAokRZB6wx8BHkRcg3ujA1DLD7N7yggijs2gAAAAAElFTkSuQmCC",
+                "pcecil" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAN5JREFUOE+VkcsRg0AMQymFY0pJGZTBkRIogVJSxpaQEnIjyOF5ZNhLmNGsP5LWXoZ9WG44vr2HLvdWOErz1AKtTQHynlEGkZxiF11NBDcq4vdjLCTl1DC5coqBE3RK5CacITxQJnATnW19plgxPVAMlGThjIXPa864h5P/23XbxmxwowwwoSaIK03k3CqidsZIAgwQqycOpmUF9iXW6fAecTFwcBO5TwakKwaMDEGxRILXWScNvEGTEf2X+VpMlwY+ruB7ss5fBgI7Y+ZvgGnkvIFgeyU5fqPdWPnL8AVxkcHgh206FQAAAABJRU5ErkJggg==",
+                "porom" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAMhJREFUOE+VkssNwzAMQzVKR+qxx46SETpCR+h4uamlIgqUP4cGICxL5IsdxNzd3I6m3+OjXufNP8+rbt4RAAOM1Pm+V82ZQhqABoQYVADDXBtgFd5JIROA2p0Aghf9LUBPoTW1BCgkBmrKWmdQZEYAxCBWhVD0/wWo9XF5JgCaEH6YMGZYIZgBwH0BIpBkmAhRaZ/fYgJQ3DOkPaxQu0IM81iEqDn2uIr0GyCKNFdAld+B+yWgGgKCGmgIh18BGqT49tVP5HbYFwwz0viUPp+zAAAAAElFTkSuQmCC",
+                "rosa" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAN1JREFUOE99k8sRwkAMQ1MOJVAGJXCkDI4cKYEjZVBCSqCM3ILl7NuR84EZjWVb0m6Y2WEe7ruI3+z4XF+dF503OWiiafrOz/MjIa6Z865fmyXArFMFN07vSwnZDcDgKCGtlgAWYIzxHk+d3aKYvQoyOj8MIISKMYUBcbA+MM2OXDaTB1CLTiFuZpHLZvYQYaMvTbTj6ZbAAHxePMUcVKch5nTv/wb4VQWMvZc06mFAF8oYYwKSSxY7/v0S4AsBU875DAvgYTXv8tK08BBAwHq+uUEZtl7gMdGjWXAffmmH5AAqsT0GAAAAAElFTkSuQmCC",
+                "rydia" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAMpJREFUOE+NkdsRwiAQRSnFUizBTz9TgiWkBEuwhJRkGfwhFz14eciYmTMkm72HJQkp7FPylZyhJ1dEW8wQOB8tg2gmIHiPpxQfl7LOREuBh12gWrwuBHpBc7+z3ikseG4EhPtdxbG98Q1+CrxBEBQ6An1aq8CLrATLuT9BGAR8AyYRhFzgotK/EgjCLhG1vxcQ0rrdnjUAXhsEKirM2fUnFOAP6F41+opkNoFQMwGHegn3EzgumfGXgNG59w9Ze2cCNfQwvte+ghReaZPfECQFwe0AAAAASUVORK5CYII=",
+                "tellah" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAN1JREFUOE9tUcERwjAMyziMwBiMwJMx+uTJCDwZgxE6AmPkFyLHcuUmvVPr2JLsuKWVbUJ/2gpLrr2kiLjW3xJnnn+HAF/GxN659XNLOeV5PJMgDLFCODibQYwtBIgj58Rk4Ll0BQVy3/t7dJB4xTsm8CS7rwzsWiI2LV40IdLYEisndJPYO3Aa7QqQJ42HO0e3swgUrO+XR5jgSaPaGQLPRSwGAE06jiSQNk4DF+tik4EcjKQmzL+uz4htN8nA7w8SoCaMWSM/DPQvnA0oZF0hS8+FFbhQ/VNAK1v5A8+MGJ8CKTGHAAAAAElFTkSuQmCC",
+                "yang" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAMtJREFUOE+NkMEVgzAMQzNax+iRURiBEToCo/TYETpCbmkU8h2DyXuFJ2zLsuKQSloN9SnEK7zOYyRdpLgvqXy3R4NyYWZyfCbDHjOTYHA3DP42mG1xa+BJ5Qi5u2rW91qbCUQXAgxB0FviRAwp+o285mQg4iqmBhhQYxIMaHoTPwy/LO/GhWEEvWmgZwZbppfK65MbwUkIEftafZ1+MlABOmmihrHuce8aMatv/In5eYBcPLX0zLToCSNrZJuZgc0FQpTD9QrC0K/pB8IDv0BtN6MgAAAAAElFTkSuQmCC"
+            };
+
+            var SLOT_IMAGES = {
+                "cid" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAABMElEQVQ4T6VTsXHDMAyE6izhKdxlhIyQEVKqzQhZwTNol5RuPYNKGg/wSRBi7qzLnZ8kgP8nBdJSSvkXRP6CLDpOoOPIywlLLuX2JuV+E5vlujlkVSSTIbCEi/ffIF53x8ykLSzQgpIOu1PcDIJJExKVOBydaOJooIvHFculrLoTQFKPYe45cGFuG1g+Gey7i/KaJi8ZeGE5GERxN9AfBcTjW8r24YSvixgyx6DjcAM/72IggXE0gTkwGlQySBQB22c3iOJ4wuETojCLaYAZ4m6AgjaHjZzuHOp4YJinBuwsT5INWMczd3E1yFdDIedc5ykwHq+xxv3b4/MlKg9oiwiaTf8LQQwMQUu+KAYOCUt64/CtbGBs4siNQYQSY/OIUwbxFOcMkpg4fYIpdOwQeQJ1C0UNSftitAAAAABJRU5ErkJggg==",
+                "dkcecil" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAU1JREFUOE+dksGVwjAMRE0ZNEIHKYEjJdACR9pIL1sDx71Sg49BI/vbsglvH/teRrHkmZHlJKUt/Q/psJX3vBEhEpjy+z3XtTZmVNL5/NiWZXUcjxfPJWxi5yIC1V2QYM+kiZ3PwpMizvndQGKM9k9gBZHn7tHgdLqN4j0D8HwmB10x0d6fBrNYQkbQ2w0wQYwBoijW0bXWG24bJSYiQQA/1+RAzP10rj1atNmCCFCH18QWhzuIx8y3xUEdsQsFi92AomEeQ7mEXB6571t0ceymTc3JNx+6GvginlscDDg+HRHvNejGFrisePzYCQOMsw0uFK49iIA6yAyD2EC11shiMYiwDY4nYu80wWLhs4ioJBnJgI56t7+xcVlEGEFjcA8c+03s3Ji0YrnEeOPD3AN3LnjxsP2u5f//3qCK8yM1ExmsF+1+cYKPsNiR0gvAYFP8mOXZ0AAAAABJRU5ErkJggg==",
+                "edge" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAATZJREFUOE+dkjEawiAMhemFHHsDR8eOjo5exdWRM3gFz+BdGGtewgtpFat+Xx8QyPsLgZTmZEqDtB8k7VtZM8w5Z1cpxYV4mibJ6oAIWJsijBAHLQDVHE35uGvagiDAInoswnS/HF2E9HegTZ2UnkadqzHNfYAHZqK4GxgXYORSy8BM4zjauf8BICkCTqebys1bABqg67Vov98XWR005rgLQBIVzeih8khzPiO7QqKZVaY5zsEEsxprbGP5fLLed4w5pl6KiYE+FpGOxYQCQmsD/4qY+QpgUoTYYktmAXmMLsCrLCpywDgPtbOLYLemTgTFgkURwCK3W4iqyawDTNwBzTjSRwDfAiHx/rcBkCyeD3L3AmjJ7aV+BeBfAYJ+BsD0H2BlZmyGdhQby/dWIdljrjFOw/wE9sSIz63na00AAAAASUVORK5CYII=",
+                "edward" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAURJREFUOE+VlLF1wzAMRJkVPIjLdBnFZUqVnkdt5vAMKb0HSwd34EEgQz3JxYEkgPug9PRUyqvsq3xYTBpzPCOMag3VTtKDFcvV6vr1sxskGa0BK0wChNmMYaYHgRvRF1drAiRPp1Fm6J+5TXgsn9ukpOfachYHwMICjBJhlocpaw6YTNsg2+3mAG7cVNfvV7nD4M+rWwRohASAhx6AGwgCU35HAZkBpAzQqnel3CmApvEW7QY004PAjZlFT+ZSvVk1QVizGOZQM8T+ZzvnmzBnkWZMi4kwwJjMud6ZIRzGZ6YxmVUXYL0lyBSQdAxg6E14SXHVpK+L56cAFNCgPdb8H0BNgA4yAgTRv0AAQd4G6PNFXX236wkAvzgzoxEG5HSDXQAKakYDclj15R0CPNGbcY5Pt9U0xL0I3LSE9qOQh7pzKX8oFYzKeyYizwAAAABJRU5ErkJggg==",
+                "fusoya" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAARhJREFUOE+tkq0VwjAURh8axxI4JA7JCEgkEollBCySGboCM3QObGToDf1KkjaBc0B8TfKSe/Nzat77n2JWi826bxTV40wXX0Dr3JDL/RFq47Wjwsy7Zh9yP68C7GqSdJDCSlWSCwTFwHLXhP5XAu0mUPDXJ+D41lgApq4wkvxP0BU0KXAKrgq4L4slKcFFARN6tPzlifqHq8sEDHrB9tQmAmoLO/rN/DaIEgkf/TwS0CKgFXxct6EFnBRwZya0O30AyWPJR4GOLgFzZQGOriNYr14TAI8EOaxdAMjt4AqCHgbQA6rlAQlgVSAIERNAaoFKkpcAR3+KGqRxURDDLBAsAcklb0EvoagJ9ePka1IBUTHux8nr3uwJTDRWI2Lob7kAAAAASUVORK5CYII=",
+                "kain" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAVpJREFUOE+VkzFWwzAQRJVjcILcgBtQUqZMSUnpa9BS0uYcaWlT5h4uzf6VZrOSzcO859HK2pnRSHFKWcrfKAcbB7AOOmJGIj/f56VMnxWX7wqZ/CZEJCC8f5VlvlWIU/kMQhLOcxOz2/FlnUAptgzY5coKpNMUCVYpXDOIIYUYsDsmNl+Jw0A7W+wQQgItQRwj913bxKPw3azdkHdbdw4mQGIggoTg8vbUGUQyEpBIXBvjCBEVwcfZgZH3JJZQifzdns7EqgxE7sQ2j6PZ+BBDSuQwEPIlUuMo9nQkajOJeb48zfXO0EXOu1CH/nWqXyh1ZRCXpgStjn3E0+utchhoCHXx4F+k5mM/xDb2dxCLtis3rSQZOnv07FmBRjs/1X9zCbj99M1sGwBvbhjIZI9B9/2DnGJXAhNh0v0XXGTYY+C3bSb/N2ji+L2Jnw0ap1aJRrj7Bmx8oJQfSM1tc0eDOOcAAAAASUVORK5CYII=",
+                "palom" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAATBJREFUOE+lVLFxxDAMUxb6Lb70KC6zRlbIDD9H2i/TZgaVDiEaJMg4aXJnUCIJgC/b73Ecx78wxhXGi0VBrzNftZI4Yb+NAtbn3DMHH8hNCt+2CjX6fPc1dSIG+bHnyn034epaERMq/s0E+TJRg26kOcXApQHwsd0KsecENZcGHewpXNjuQRQNEPYcnPm6BTePYBeJc05bnzEde6/5EBiQm0PtogkNQHSyG/AXLIHwfZUChYpyHHIVS/gc8YZ1g94vYsCDT8gbk9AaDUMMsKHTQnDutR9HslgM9Ky4ccVI+j8NVnAiUc4sRgGLAQ8mup9EFWBP2J+q8CwueJAGiCqkWAyKiQcxoEnH2fvT4MsyIMg2vXzGhJcD7WKDJADPnx+T8kQuDQAk3DNXXNWPMb4B18BdXIHIQCUAAAAASUVORK5CYII=",
+                "pcecil" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAWBJREFUOE+FlLFxwzAMRemFUnoLlxojK6R0mRU8g0q3bt1mBc/AUsEH+EEAZi53/iQE4j+ClM6tHS2rnQ6fKa6tZMM0Xa9dIpspB7EuCsnev3URxfe7mTBDNe8gSEYF7MKqEBat4NC2PUYNis7nBKGx/0hOVAFuht2G0cUwRBAUu0hmiADuFPW8fLiBra870GCa2g1d2D0QQuOfHVD9a3MAzLELat8/LZZRzTgjkwBQBNCkF8v7gVkBOsyLqgCuoSNukjvQAUWzIJpbex0XibGG2Wpnx293AEOMveUhvO78zcjAlrVAyLxtFHHXeh9mLoBYEFtGPm6SjzAK4g6ml7++CiA4XaInRfhoVueHfGcZE0Db1icUTnM8Ci8vQQjQhQGgmcYK4PoSMLuw3b0YzwEw8/JDEAGEEBCPgWfEfgwCkHgDyKx/NgHAeAmwxGhXnrXV8W/1L0CFmGIuquaP1n4Bq36650al89sAAAAASUVORK5CYII=",
+                "porom" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAATZJREFUOE+FlM2VwjAMhL3VcNsjN0rhmDa2BFrgunWkKR+DRtLIimzgvYxt/cxnOw/S2tFmtR8Zk2qeseZOgTVsv+0k5ntvx9/NY/RDY2FGNGRVUN9tHr5ift7HzHWFcDZvMmdjBq0gyCuEAELyXNfUWwC0b7eYua6iZwJU0zuIGcs7iKQIphpXwLiCPGzsvR/t2mNnrDUnNRj7Y3NT3lQeQghAozY7gCcIgPfbzAAAN2bV68SGFAH4ma4gNKLOnjBDo4jjekMRzaceGQ2gQ222u1fgZIa08Om4tV4hbODL6pdk9HWuzwAdzEDpCfxvm4EqADLEBgn+RyPM+8NiAKBdOz8BPFmvQPMEiA3liYIbachiLcxLwKlgV8H7wDeBuagvAWwSwcSvUXwHoSUAQsA14286WnsB0JtUaYKdkZIAAAAASUVORK5CYII=",
+                "rosa" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAATxJREFUOE+lkit6wzAQhLdXCAvrCQLDfITAwh5BMDRHCA00Lc0VSkt7jlJDV7PS2LOy035JwOxqX78ky2ajzbKXbFeUbVirtHhOu6B02LhQG4Zh3B63vo6AnLieD2EInjnE35/mwwoMAN2NjYS0OWgBQBGexxz6tzCgwCXATfkGHKY4CH8TMpMKhFJICwRkFYAms96vgvia9j4EfzcAQwSUfPlWhEQAggqYVCGsUQRMEBi8M7wCOIwa6/ThFD6Yd1OI7oy81mHhASk9NdEKT/rTvcd8tpMYK4D/gf95H8k9a3yZAIG8WO/NQR1m7SaETbw3vMZhvQpwU455OfXusTukHzPt0t8AFBXQnoSABaQFEPI04Ou182eEZ+4uQBvzBIgDRAFogh4CcFCHsaZnj24yA3xRE1z/p2xtNPsFoyunKJLXSjYAAAAASUVORK5CYII=",
+                "rydia" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAUlJREFUOE99kz1WAzEMhMUVuAQdt0hJSUnJEdKm5BrbcgXatLTcxeWimfXI8s/mvR1HljSf1k5ittu57MnXJOWz1snDcPl967QEdRsmmvG73Dt1oOhXwE2bfGaeINms4kNT7esBNTlOfP56DaGnvPztm90YK9dNRpzNP9dLCDWYTwH6XJkzROYG8Gc0q3E0Ika9bO/nAMSllN0+rQE8Zs5rDwFIsqEC0AgJkN+AZnqxVIioMmblo4QZioAbUWcIc3dUk5m9ecOEN1yP82bBXMpthoRJcjMazQDxmIYZ2AC+ya9JVYimdcfwXyPEPl8DoEuKIo9xTB7r+jUeAC51chYACTLJ1wbIQlFmF46xfaDi03GRy0vMUmO+cVccYfwmwphVTTJ2dzDB/TmVN/Av7EcQQBDG7MGykjdoOtTffP1krGAlNGYpHzL7B89bfxHH5lg1AAAAAElFTkSuQmCC",
+                "tellah" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAUpJREFUOE+VkrGVwyAQRLmm1IFDl+DQJThVK65B4aWuQaH7ILzbv2hgAZ3fu/c0MOzODCAppZ80I33ZOIB6hGrd4uDbliecabzWLwrPeUbU9GsbHo+2k5ojVNeMpwSQMYTAR5ya3WuEomaaebtPUIjM8ky7I6YmY+TSgHqK8Qpe/Faz8de6nJgVAGxRGx8COrON1Zx3WLtb/FSj+f0s2uJFbOY1bQ6ZEQP4suzVLJ02nE4gMyYZqcmMrprdy+CkhWDkyADu4tB32Fh8PhzFA9o13lvIF+sZfG2jm+M3B5iiOfYVUEMk4E3D97T6TEAR9P3TAAGzAgB3ft7avenJ3HRHYzRfjeuTwUHUSje9RAljgEKirv5MCqDwl1kBsT8FcN//BLR/IgTohZGOiZpmTNoV3RTQjlQ4An4mnw3URk3h9iik459gY5lT+gUVmf08Go3aCQAAAABJRU5ErkJggg==",
+                "yang" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAARtJREFUOE+NkbGVwzAMQ5UxMsyNcKVLj+CZ0rrNLlfeHioTgiIoUlLyXHxSIgHYTkp5lZlykzqA+Yp5cHs9f8vEx0A/6KWZ6/HjLENM2zqKDUbzx5ArASqw2bUADgPJZHc9S+0dhZjokFut1Q3jW1HbOgoxcQzAnd1Npm2dAw4thMalOWinABfb2T+j3n0e9csAQgND1p/ih/x0Ggh27CmEZhqWQtuxc992UqJ41Xk+z1P/HXQGpoA+7Iw7mMG+76aRwteiqP71Pu5gdDPsrQxPlWndBN3mnSO1B4yIIIY8DMz/H613LQ+RLwH4rBTipggDhGgGMKeQZIyYITHO9Y4yooKn/vLTXxx1YB4087ZV7ZkrATpEyAKpmVLedOwxS2TnXjEAAAAASUVORK5CYII="
+            };
+
+            var SLOT_ALT_IMAGES = {
+                "rydia" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAT5JREFUOE+lk7txAzEMRKkW1ISrUKgSHLoEhU5dglq4OpxeDeoFoYwFsTiQ4IxG42B5JLD7+NGotWdbq510XEjH0VcK3XjZLyGRZt/z/Wy90T8sjiBDUIYWyBwWkbKjbFr7ePS59gZIBRzh3+9rD2l4b5vNyykyYA5TZoZ+1KmqAF0gONBdhKAu26epfSE1AerR8RYSENYrIIUJMJMD5hNYOAMQwoJhGkMOQb2EoRxGcwYgHCGKYQgFC/uX8wh7aFjreABs6CaG8475/ktIBmTBiEBAk25y63MdLUw6d+aO+TrsI4xfLSA02NHUwF/FIGqc+wTQN1wBxdwExE6Bk/np1gBo1dQQ34KP9xIQDa/x/v8CoGZ1/Bv9nZaAIey1gHqYvrcB+72HizfM3sjzfCXcO/r6XQNmmeEIld6ztT9ac3lgEPGKAwAAAABJRU5ErkJggg=="
+            };
+
+            var EMPTY_SLOT_IMAGE = "data:image/png;base64,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";
+
+            var ARROW_IMAGES = {
+                "light.rows" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAFCAYAAACJmvbYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAACVJREFUGFdj+P//P04MIYAUOoZLoiuAi8EYYA6SBJiPzEHF/xkAvxVWqg2XyUAAAAAASUVORK5CYII=",
+                "dark.rows" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAFCAYAAACJmvbYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAACNJREFUGFdj+P//P04MY2ADcEl0BWAxZEmYAjgfWQIN/2cAAMWNcY8Pghu4AAAAAElFTkSuQmCC",
+                "light.columns" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAMklEQVQoU2P4//8/XowpABYioABZEYogOkZRAKJhbBQ+TBAugMQG87EJImOsggj8nwEA9pKhXxJbLowAAAAASUVORK5CYII=",
+                "dark.columns" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAADFJREFUKFNj+P//P16MTRAE4HxkCRiGATAfXRAdoChAVwzm41IAY2NVgIKxCiLwfwYA3P3OMrPTrxsAAAAASUVORK5CYII="
+            };
+
+        </script>
+
+    </body>
+
+</html>

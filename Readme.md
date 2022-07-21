@@ -26,4 +26,4 @@ The project is to port various game/rom randomizers to be usable on handheld emu
 * select ui toolkit
 * establish dev environment
 * being development
-* implement non-mouse input(ie gamepad input controls)
+* implement non-mouse input(ie gamepad input controls)git

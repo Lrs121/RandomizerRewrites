@@ -133,3 +133,242 @@
 [submodule "references/dkc3random"]
 	path = references/dkc3random
 	url = https://github.com/pozzum/DKC3Randomizer
+[submodule "references/DK64random"]
+	path = references/DK64random
+	url = https://github.com/2dos/DK64-Randomizer
+[submodule "references/doom2+finaldoom-random"]
+	path = references/doom2+finaldoom-random
+	url = https://gitlab.com/andwj/populate
+[submodule "references/dwrandom"]
+	path = references/dwrandom
+	url = https://github.com/mcgrew/dwrandomizer
+[submodule "references/ff4fabulgauntlet"]
+	path = references/ff4fabulgauntlet
+	url = https://github.com/gameboy9/FF4FabulGauntlet
+[submodule "references/ff1-pr-rando"]
+	path = references/ff1-pr-rando
+	url = https://github.com/gameboy9/FF1-PR-Rando
+[submodule "references/ff5abridged"]
+	path = references/ff5abridged
+	url = https://github.com/gameboy9/FF5Abridged
+[submodule "references/dwrandom-gb9"]
+	path = references/dwrandom-gb9
+	url = https://github.com/gameboy9/dwrandomizer
+[submodule "references/jetsoftime-gb9"]
+	path = references/jetsoftime-gb9
+	url = https://github.com/gameboy9/jetsoftime
+[submodule "references/7thsagarandom"]
+	path = references/7thsagarandom
+	url = https://github.com/gameboy9/7thsagarando
+[submodule "references/dw4randomhacker"]
+	path = references/dw4randomhacker
+	url = https://github.com/gameboy9/dw4randohacker
+[submodule "references/dw3random"]
+	path = references/dw3random
+	url = https://github.com/gameboy9/dw3randomizer
+[submodule "references/excitebikerandom"]
+	path = references/excitebikerandom
+	url = https://github.com/gameboy9/excitebikerando
+[submodule "references/dw2random"]
+	path = references/dw2random
+	url = https://github.com/gameboy9/dw2randomizer
+[submodule "references/paladinsquest-random"]
+	path = references/paladinsquest-random
+	url = https://github.com/gameboy9/paladinsquestrando
+[submodule "references/radracer-random"]
+	path = references/radracer-random
+	url = https://github.com/gameboy9/radracerrando
+[submodule "references/golf-random"]
+	path = references/golf-random
+	url = https://github.com/gameboy9/golfrando
+[submodule "references/dq12sfcrandom"]
+	path = references/dq12sfcrandom
+	url = https://github.com/gameboy9/dq12sfcrando
+[submodule "references/ff1psp-random"]
+	path = references/ff1psp-random
+	url = https://github.com/gameboy9/ffrpsp
+[submodule "references/rcproam-random"]
+	path = references/rcproam-random
+	url = https://github.com/gameboy9/rcproamrandomizer
+[submodule "references/dq3heavenlyflight"]
+	path = references/dq3heavenlyflight
+	url = https://github.com/cleartonic/dq3hf
+[submodule "references/dq8-random"]
+	path = references/dq8-random
+	url = https://github.com/pIayinful/DQ8-Rando
+[submodule "references/dwm2randomizer"]
+	path = references/dwm2randomizer
+	url = https://github.com/TheCowness/DWM2Randomizer
+[submodule "references/earthbound-bizarredimention"]
+	path = references/earthbound-bizarredimention
+	url = https://github.com/abyssonym/bizarre_dimension
+[submodule "references/earthbound-randomizer"]
+	path = references/earthbound-randomizer
+	url = https://github.com/stochaztic/eb-randomizer
+[submodule "references/enderlillies-random"]
+	path = references/enderlillies-random
+	url = https://github.com/Trexounay/EnderLilies.Randomizer
+[submodule "references/ff1random-coop"]
+	path = references/ff1random-coop
+	url = https://github.com/FiendsOfTheElements/FFR-Coop
+[submodule "references/ff1randomizer"]
+	path = references/ff1randomizer
+	url = https://github.com/FiendsOfTheElements/FF1randomizer
+[submodule "references/ff2randomizer"]
+	path = references/ff2randomizer
+	url = https://github.com/PheonixMMKC777/Final_Fantasy_2_Randomizer
+[submodule "references/ff12dos-approachingchaos"]
+	path = references/ff12dos-approachingchaos
+	url = https://github.com/abyssonym/approaching_chaos
+[submodule "references/hmsjayne-ff1randomizer"]
+	path = references/hmsjayne-ff1randomizer
+	url = https://github.com/hmsjayne/ffr-hmsj
+[submodule "references/ff3randomizer"]
+	path = references/ff3randomizer
+	url = https://github.com/nachoyacopu/ff3-randomizer
+[submodule "references/ff4-beyondbabil"]
+	path = references/ff4-beyondbabil
+	url = https://github.com/abyssonym/beyond_babil
+[submodule "references/ff5-grandcross"]
+	path = references/ff5-grandcross
+	url = https://github.com/abyssonym/grand_cross
+[submodule "references/ff6-beyondchaos"]
+	path = references/ff6-beyondchaos
+	url = https://github.com/abyssonym/beyondchaos
+[submodule "references/ff6-beyondchaosex"]
+	path = references/ff6-beyondchaosex
+	url = https://github.com/subtractionsoup/beyondchaos
+[submodule "references/ff6-beyondchaosgaiden"]
+	path = references/ff6-beyondchaosgaiden
+	url = https://github.com/abyssonym/beyondchaos
+[submodule ".\\references\\ff6-beyondchaosgaiden"]
+	url = https://github.com/abyssonym/beyondchaos_gaiden
+[submodule "references/abyssonym-randomtools"]
+	path = references/abyssonym-randomtools
+	url = https://github.com/abyssonym/randomtools
+[submodule "references/ff6-worldscollide"]
+	path = references/ff6-worldscollide
+	url = https://github.com/AtmaTek/WorldsCollide
+[submodule "references/ff7-maelstrom"]
+	path = references/ff7-maelstrom
+	url = https://github.com/sleepeybunney/maelstrom
+[submodule "references/hades-workshop"]
+	path = references/hades-workshop
+	url = https://github.com/Tirlititi/Hades-Workshop
+[submodule "references/ff9-stiltzkinsbag"]
+	path = references/ff9-stiltzkinsbag
+	url = https://github.com/Druthulu/Stiltzkins-Bag
+[submodule "references/ffxrandomizer"]
+	path = references/ffxrandomizer
+	url = https://github.com/BitPatty/FFXRandomizer
+[submodule "references/ffXIIIrandomizer"]
+	path = references/ffXIIIrandomizer
+	url = https://github.com/Bartz24/FF13Randomizer/
+[submodule "references/ffmodingwpf"]
+	path = references/ffmodingwpf
+	url = https://github.com/Bartz24/FFModdingWPF
+[submodule "references/fft-rumblechaoscrashdown"]
+	path = references/fft-rumblechaoscrashdown
+	url = https://github.com/abyssonym/rumble_chaos_crashdown
+[submodule "references/fftctcr"]
+	path = references/fftctcr
+	url = https://github.com/abyssonym/fftrctcr
+[submodule "references/FFTArandomizer"]
+	path = references/FFTArandomizer
+	url = https://github.com/TojiKitten/FFTA-randomizer
+[submodule "references/ffmq-terriblesecret"]
+	path = references/ffmq-terriblesecret
+	url = https://github.com/abyssonym/terriblesecret
+[submodule "references/ffmqrando"]
+	path = references/ffmqrando
+	url = https://github.com/wildham0/FFMQRando
+[submodule "references/finalfightaniversaryeditioneditor"]
+	path = references/finalfightaniversaryeditioneditor
+	url = https://github.com/GameHackFan/ffaee
+[submodule "references/xanerandomizer"]
+	path = references/xanerandomizer
+	url = https://github.com/izumi-niche/XaneRandomizer
+[submodule "references/universal-fe-randomizer"]
+	path = references/universal-fe-randomizer
+	url = https://github.com/lushen124/Universal-FE-Randomizer
+[submodule "references/fe5-randomizer-binaries"]
+	path = references/fe5-randomizer-binaries
+	url = https://github.com/dDShockTrooper/FE5-Randomiser-Releases
+[submodule "references/universial-gba-fe-randomizer"]
+	path = references/universial-gba-fe-randomizer
+	url = https://github.com/lushen124/Universal-GBA-FE-Randomizer-Windows
+[submodule "references/fe9-charactereditor+randomizer"]
+	path = references/fe9-charactereditor+randomizer
+	url = https://github.com/jespoketheepic/FE9-Character-Editor-and-Randomizer
+[submodule "references/fe10-randomizer"]
+	path = references/fe10-randomizer
+	url = https://github.com/LordMewtwo73/fe10-randomizer
+[submodule "references/fe11-jespokesrandomizer"]
+	path = references/fe11-jespokesrandomizer
+	url = https://github.com/jespoketheepic/Jespokes-FE11-Randomizer
+[submodule "references/feawakening-randomizerrewrite"]
+	path = references/feawakening-randomizerrewrite
+	url = https://github.com/Nyaaaa2314/AwakeningRandomizerRewrite
+[submodule "references/fire-emblem-awakening-randomizer"]
+	path = references/fire-emblem-awakening-randomizer
+	url = https://github.com/rambon99/Fire-Emblem-Awakening-Randomizer
+[submodule "references/fefates3ds-randomizer"]
+	path = references/fefates3ds-randomizer
+	url = https://github.com/thane98/3DSFE-Randomizer
+[submodule "references/gatoroborandomizer"]
+	path = references/gatoroborandomizer
+	url = https://github.com/CaptainDapper/GatoRobotoRandomizer
+[submodule "references/godzilla-monsterofmonsters-randomizer"]
+	path = references/godzilla-monsterofmonsters-randomizer
+	url = https://github.com/MaybeDatapod/godzilla-randomizer
+[submodule "references/gooftroop-randomizer"]
+	path = references/gooftroop-randomizer
+	url = https://github.com/GB127/GT-Rando
+[submodule "references/gtasa-randomizer"]
+	path = references/gtasa-randomizer
+	url = https://github.com/Parik27/SA.Rainbomizer
+[submodule "references/hollowknight-randomizer"]
+	path = references/hollowknight-randomizer
+	url = https://github.com/homothetyhk/RandomizerMod
+[submodule "references/jetman-solar-randomizer"]
+	path = references/jetman-solar-randomizer
+	url = https://github.com/GB127/ST-rando
+[submodule "references/kartia-randomizer"]
+	path = references/kartia-randomizer
+	url = https://github.com/Meerkov/Kartia
+[submodule "references/telefang-power-randomizer"]
+	path = references/telefang-power-randomizer
+	url = https://github.com/Sanqui/online-randomizer
+[submodule "references/kh2doorrando"]
+	path = references/kh2doorrando
+	url = https://github.com/MainMemory/KH2DoorRando
+[submodule "references/kh2-random-setupcheck"]
+	path = references/kh2-random-setupcheck
+	url = https://github.com/KH2FM-Mods-equations19/rando-setup-checker
+[submodule "references/openkh"]
+	path = references/openkh
+	url = https://github.com/Xeeynamo/OpenKh
+[submodule "references/kh2fm-randomizer"]
+	path = references/kh2fm-randomizer
+	url = https://github.com/afresquet/kh2fm-randomizer
+[submodule "references/kirbysadventure-randomizer"]
+	path = references/kirbysadventure-randomizer
+	url = https://github.com/Aquova/KA-Rando
+[submodule "references/kirbynightmaredreamland-random"]
+	path = references/kirbynightmaredreamland-random
+	url = https://github.com/Aquova/KNDL-Rando
+[submodule "references/kidicarus-randomizer"]
+	path = references/kidicarus-randomizer
+	url = https://github.com/toddcblank/kid_randomicus
+[submodule "references/kirbysuperstar-random"]
+	path = references/kirbysuperstar-random
+	url = https://github.com/firubii/kss-randomizer
+[submodule "references/kamrandomzier"]
+	path = references/kamrandomzier
+	url = https://github.com/GateGuy/kamrandomizer
+[submodule "references/amazing-mirror-randomizer"]
+	path = references/amazing-mirror-randomizer
+	url = https://github.com/HeyImTG/Amazing-Mirror-Randomizer
+[submodule "references/kirbystarallies-ranomizer"]
+	path = references/kirbystarallies-ranomizer
+	url = https://github.com/firubii/StarAlliesRandomizer
